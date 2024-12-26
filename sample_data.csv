@@ -1,0 +1,6 @@
+source,relationship,target,source_properties,target_properties,relationship_properties
+Person:john_doe,WORKS_AT,Company:acme_corp,name:John Doe;role:Engineer,name:Acme Corporation;industry:Technology,start_date:2023-01-15;position:Senior Engineer
+Person:jane_smith,WORKS_AT,Company:acme_corp,name:Jane Smith;role:Manager,name:Acme Corporation;industry:Technology,start_date:2022-06-01;position:Project Manager
+Person:john_doe,KNOWS,Person:jane_smith,name:John Doe;role:Engineer,name:Jane Smith;role:Manager,relationship_type:Colleague;team:Engineering
+Company:acme_corp,SUBSIDIARY_OF,Company:tech_global,name:Acme Corporation;industry:Technology,name:Tech Global;industry:Technology,ownership:100%;established:2020
+Person:jane_smith,MANAGES,Project:cloud_migration,name:Jane Smith;role:Manager,name:Cloud Migration;status:Active,start_date:2023-03-01;priority:High 

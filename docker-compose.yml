@@ -1,0 +1,66 @@
+version: "3.8"
+
+services:
+  postgres:
+    image: pgvector/pgvector:pg17
+    container_name: pgvector_db
+    environment:
+      - POSTGRES_USER=${POSTGRES_USER:-postgres}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD:-postgres}
+      - DBT_USER=${DBT_USER:-dbt_user}
+      - DBT_PASSWORD=${DBT_PASSWORD:-dbt_password}
+      - DBT_DATABASE=${DBT_DATABASE:-dbt_db}
+      - DBT_SCHEMA=${DBT_SCHEMA:-permanent}
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./docker/init.sql:/docker-entrypoint-initdb.d/init.sql:ro
+    ports:
+      - "5432:5432"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres -d postgres"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    restart: unless-stopped
+
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile.app
+    container_name: fastapi_app
+    ports:
+      - "8000:8000"
+    environment:
+      - DBT_HOST=postgres
+      - DBT_PORT=5432
+      - DBT_USER=${DBT_USER:-dbt_user}
+      - DBT_PASSWORD=${DBT_PASSWORD:-dbt_password}
+      - DBT_DATABASE=${DBT_DATABASE:-dbt_db}
+      - DBT_SCHEMA=${DBT_SCHEMA:-permanent}
+      - OPENAI_API_KEY=${OPENAI_API_KEY:-YOUR_OPENAI_KEY}
+    depends_on:
+      postgres:
+        condition: service_healthy
+    restart: on-failure
+
+  neo4j:
+    image: neo4j:5.14.0
+    container_name: neo4j_db
+    environment:
+      - NEO4J_AUTH=neo4j/yourpassword
+      - NEO4J_apoc_export_file_enabled=true
+      - NEO4J_apoc_import_file_enabled=true
+      - NEO4J_apoc_import_file_use__neo4j__config=true
+    ports:
+      - "7474:7474"  # HTTP
+      - "7687:7687"  # Bolt
+    volumes:
+      - neo4j_data:/data
+      - neo4j_logs:/logs
+      - neo4j_import:/import
+
+volumes:
+  postgres_data:
+  neo4j_data:
+  neo4j_logs:
+  neo4j_import:
