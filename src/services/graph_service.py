@@ -1,5 +1,5 @@
 from neo4j import GraphDatabase
-from typing import List, Dict, Any
+from typing import List, Dict, Any, Optional
 from core.config import settings
 
 class GraphService:
@@ -12,36 +12,55 @@ class GraphService:
     def close(self):
         self.driver.close()
 
-    def create_graph_elements(self, elements: List[Dict[str, Any]]) -> int:
-        """Create nodes and relationships from processed CSV data"""
-        records_processed = 0
-        
+    def create_node(self, label: str, properties: Dict[str, Any]) -> Dict[str, Any]:
+        """Create a single node"""
         with self.driver.session() as session:
-            for element in elements:
-                try:
-                    cypher = """
-                    MERGE (source:{source_label} {id: $source})
-                    SET source += $source_properties
-                    MERGE (target:{target_label} {id: $target})
-                    SET target += $target_properties
-                    MERGE (source)-[r:{relationship} $relationship_properties]->(target)
-                    RETURN source, target
-                    """.format(
-                        source_label=element['source'].split(':')[0],
-                        target_label=element['target'].split(':')[0],
-                        relationship=element['relationship']
-                    )
-                    
-                    session.run(
-                        cypher,
-                        source=element['source'],
-                        target=element['target'],
-                        source_properties=element['source_properties'],
-                        target_properties=element['target_properties'],
-                        relationship_properties=element['relationship_properties']
-                    )
-                    records_processed += 1
-                except Exception as e:
-                    print(f"Error processing graph element: {e}")
-                    
-        return records_processed
+            result = session.run(
+                f"CREATE (n:{label} $props) RETURN n",
+                props=properties
+            )
+            return result.single()["n"]
+
+    def create_relationship(
+        self,
+        source_label: str,
+        target_label: str,
+        relationship_type: str,
+        source_props: Dict[str, Any],
+        target_props: Dict[str, Any],
+        relationship_props: Optional[Dict[str, Any]] = None
+    ) -> bool:
+        """Create relationship between nodes"""
+        with self.driver.session() as session:
+            try:
+                cypher = """
+                MERGE (source:{source_label} {id: $source_id})
+                SET source += $source_props
+                MERGE (target:{target_label} {id: $target_id})
+                SET target += $target_props
+                MERGE (source)-[r:{rel_type} $rel_props]->(target)
+                RETURN source, target
+                """.format(
+                    source_label=source_label,
+                    target_label=target_label,
+                    rel_type=relationship_type
+                )
+                
+                session.run(
+                    cypher,
+                    source_id=source_props['id'],
+                    target_id=target_props['id'],
+                    source_props=source_props,
+                    target_props=target_props,
+                    rel_props=relationship_props or {}
+                )
+                return True
+            except Exception as e:
+                print(f"Error creating relationship: {e}")
+                return False
+
+    def query_graph(self, query: str, params: Dict[str, Any] = None) -> List[Dict[str, Any]]:
+        """Execute a Cypher query"""
+        with self.driver.session() as session:
+            result = session.run(query, parameters=params or {})
+            return [record.data() for record in result]

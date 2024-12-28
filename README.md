@@ -1,103 +1,98 @@
 # Enterprise Data Manager
 
-A sophisticated data management system that combines graph-based structured data processing with embeddings-based unstructured data analysis, designed for enterprise-scale data operations.
+A sophisticated data management system combining graph-based structured data processing with embeddings-based unstructured data analysis for enterprise-scale operations.
 
 ## 🎯 Vision
-
-Enterprise Data Manager aims to provide a unified solution for handling both structured and unstructured data by:
-- Using graph databases for modeling complex relationships in structured data
-- Leveraging embeddings and vector storage for semantic understanding of unstructured data
-- Providing an intuitive API for data ingestion, processing, and retrieval
+Providing a unified solution for handling both structured and unstructured data through:
+- Graph-based modeling for structured data relationships
+- Vector embeddings for unstructured data understanding
+- RESTful API for seamless data operations
 
 ## 🏗️ Architecture
 
 ### Core Components
-- **FastAPI Backend**: RESTful API service for data operations
-- **PostgreSQL + pgvector**: Vector-enabled database for storing embeddings
-- **Graph Database** *(planned)*: For structured data relationships
-- **OpenAI Integration**: For generating high-quality embeddings
-- **DBT**: For data transformation and modeling
+- FastAPI Backend: RESTful API with async processing and multi-format data ingestion
+- Vector Store: PostgreSQL with pgvector extension for embedding storage and similarity search
+- Graph Database: Neo4j with APOC for relationship modeling and graph traversal
+- Embedding Generation: OpenAI API integration for high-quality embeddings
+- Data Processing: DBT for transformation pipelines and data modeling
+- Infrastructure: Containerized deployment with Docker and Docker Compose
 
-### Data Processing Pipeline
-1. File ingestion through REST API
-2. Data processing based on file type
-3. Structured data → Graph representation
-4. Unstructured data → Embeddings generation
-5. Deduplication and storage
+### Data Flow
+1. **Data Ingestion Layer**
+   - Multi-format file upload support (CSV, JSON, etc.)
+   - Temporary file management
+   - Format-specific validation
 
-## 🚀 Getting Started
+2. **Processing Layer**
+   - Document processing and metadata extraction
+   - Embedding generation and deduplication
+   - Graph element creation and relationship mapping
 
-### Prerequisites
+3. **Storage Layer**
+   - Vector embeddings in pgvector
+   - Graph relationships in Neo4j
+   - Metadata in PostgreSQL
+
+4. **Retrieval Layer**
+   - Semantic similarity search
+   - Graph-enhanced retrieval
+   - Hybrid ranking system
+
+## 📋 Current Status
+
+### Implemented Features
+- FastAPI endpoints for data operations and retrieval
+- PostgreSQL + pgvector integration for embedding storage
+- Neo4j graph database integration
+- OpenAI embeddings generation
+- Document deduplication system
+- Basic graph schema and relationships
+- Multi-format file processing pipeline
+- DBT data transformation integration
+
+### In Development
+- Advanced entity extraction
+- Relationship inference engine
+- Knowledge graph enrichment
+- Result reranking system
+- Batch processing capabilities
+- Caching implementation
+
+## 🗺️ Roadmap
+
+### Phase 1: Core Enhancement
+- Document chunking and preprocessing
+- Advanced entity recognition
+- Relationship type expansion
+- Query optimization
+
+### Phase 2: Advanced Features
+- Automated knowledge graph construction
+- Context-aware retrieval
+- Dynamic relationship weighting
+- Multi-model embedding support
+
+### Phase 3: Scale & Performance
+- Distributed processing
+- Real-time updates
+- Advanced caching strategies
+- Performance monitoring
+
+## 🚀 Quick Start
+
+### Requirements
 - Docker and Docker Compose
 - OpenAI API key
 - Python 3.9+
 
-### Environment Setup
+### Setup
 1. Clone the repository
-2. Create a `.env` file with required configurations:
-   ```
-   OPENAI_API_KEY=your_api_key
-   DATABASE_URL=postgresql://user:password@db:5432/dbname
-   ```
-3. Run with Docker Compose:
-   ```bash
-   docker-compose up -d
-   ```
-
-## 📋 Current Features
-- FastAPI-based REST API
-- Docker containerization
-- CSV file ingestion capability
-- OpenAI-powered embeddings generation
-- Document deduplication
-- Vector storage with pgvector
-- DBT integration for data transformations
-
-## 🗺️ Roadmap
-
-### High Priority
-1. Implement graph database integration
-   - Select and integrate a graph database (e.g., Neo4j, Amazon Neptune)
-   - Migrate CSV processor to use graph structure
-   - Develop graph query endpoints
-
-2. Enhance Data Processing
-   - Add support for more file formats (JSON, XML, etc.)
-   - Implement batch processing capabilities
-   - Add data validation and cleaning pipeline
-
-3. Improve Vector Operations
-   - Implement semantic search endpoints
-   - Add clustering capabilities
-   - Optimize vector storage and retrieval
-
-### Medium Priority
-1. Security Enhancements
-   - Implement role-based access control
-   - Add audit logging
-   - Enhance API authentication
-
-2. Performance Optimization
-   - Add caching layer
-   - Implement async processing for large files
-   - Optimize database queries
-
-### Future Considerations
-- Real-time data processing pipeline
-- Machine learning model integration
-- Data lineage tracking
-- Advanced analytics dashboard
-- API rate limiting and quotas
+2. Copy `.env.example` to `.env` and configure
+3. Run: `docker-compose up -d`
 
 ## 🛠️ Tech Stack
 - **Backend**: FastAPI, Python 3.9+
-- **Databases**: PostgreSQL, pgvector
-- **Data Processing**: DBT, LangChain
-- **AI/ML**: OpenAI
+- **Databases**: PostgreSQL, pgvector, Neo4j
+- **Processing**: DBT, LangChain, OpenAI
 - **Infrastructure**: Docker, Docker Compose
-
-## 📄 License
-[Add your license information here]
-
-## 👥 Contributing
-[Add contribution guidelines here]
