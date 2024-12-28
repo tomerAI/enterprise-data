@@ -9,22 +9,26 @@ retrieval_service = RetrievalService()
 async def search(
     query: str,
     max_results: Optional[int] = Query(default=5, gt=0, le=20),
-    graph_depth: Optional[int] = Query(default=2, ge=1, le=5)
+    similarity_threshold: Optional[float] = Query(default=0.7, gt=0, le=1.0)
 ):
     """
-    Search across documents using semantic search enhanced with graph relationships.
+    Search across documents using semantic search with RAG.
     
     Parameters:
     - query: Search query string
     - max_results: Maximum number of results to return (default: 5)
-    - graph_depth: Depth of graph traversal for related nodes (default: 2)
+    - similarity_threshold: Minimum similarity score threshold (default: 0.7)
     """
     try:
-        results = await retrieval_service.graph_enhanced_search(
+        results = await retrieval_service.semantic_search(
             query=query,
-            max_results=max_results,
-            depth=graph_depth
+            limit=max_results,
+            threshold=similarity_threshold
         )
-        return results
+        return {
+            "query": query,
+            "results": results,
+            "result_count": len(results)
+        }
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e)) 

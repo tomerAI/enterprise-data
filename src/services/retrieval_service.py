@@ -1,11 +1,9 @@
 from typing import List, Dict, Any, Optional
-from .graph_service import GraphService
 from .embedding_service import EmbeddingService
 import psycopg2
 
 class RetrievalService:
     def __init__(self):
-        self.graph_service = GraphService()
         self.embedding_service = EmbeddingService()
 
     async def semantic_search(
@@ -34,24 +32,3 @@ class RetrievalService:
                     'source': row[2],
                     'similarity': float(row[3])
                 } for row in cur.fetchall()]
-
-    async def get_related_nodes(
-        self,
-        doc_id: str,
-        depth: int = 2,
-        limit: int = 10
-    ) -> List[Dict[str, Any]]:
-        """Get related nodes from graph database"""
-        cypher_query = """
-        MATCH (doc:Document {id: $doc_id})
-        CALL apoc.path.subgraphNodes(doc, {
-            maxLevel: $depth,
-            limit: $limit
-        })
-        YIELD node
-        RETURN node
-        """
-        return self.graph_service.query_graph(
-            cypher_query,
-            params={'doc_id': doc_id, 'depth': depth, 'limit': limit}
-        )

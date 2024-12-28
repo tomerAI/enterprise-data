@@ -1,11 +1,11 @@
 # Enterprise Data Manager
 
-A sophisticated data management system combining graph-based structured data processing with embeddings-based unstructured data analysis for enterprise-scale operations.
+A sophisticated data management system leveraging embeddings-based data analysis for enterprise-scale operations, enabling intelligent search and retrieval through vector representations.
 
 ## 🎯 Vision
-Providing a unified solution for handling both structured and unstructured data through:
-- Graph-based modeling for structured data relationships
-- Vector embeddings for unstructured data understanding
+Providing a unified solution for handling structured and unstructured data through:
+- Vector embeddings for data understanding and representation
+- Semantic similarity search capabilities
 - RESTful API for seamless data operations
 
 ## 🏗️ Architecture
@@ -13,7 +13,6 @@ Providing a unified solution for handling both structured and unstructured data 
 ### Core Components
 - FastAPI Backend: RESTful API with async processing and multi-format data ingestion
 - Vector Store: PostgreSQL with pgvector extension for embedding storage and similarity search
-- Graph Database: Neo4j with APOC for relationship modeling and graph traversal
 - Embedding Generation: OpenAI API integration for high-quality embeddings
 - Data Processing: DBT for transformation pipelines and data modeling
 - Infrastructure: Containerized deployment with Docker and Docker Compose
@@ -27,16 +26,16 @@ Providing a unified solution for handling both structured and unstructured data 
 2. **Processing Layer**
    - Document processing and metadata extraction
    - Embedding generation and deduplication
-   - Graph element creation and relationship mapping
+   - Vector representation creation
 
 3. **Storage Layer**
    - Vector embeddings in pgvector
-   - Graph relationships in Neo4j
    - Metadata in PostgreSQL
+   - Document references and relationships
 
 4. **Retrieval Layer**
    - Semantic similarity search
-   - Graph-enhanced retrieval
+   - Context-aware retrieval
    - Hybrid ranking system
 
 ## 📋 Current Status
@@ -44,17 +43,14 @@ Providing a unified solution for handling both structured and unstructured data 
 ### Implemented Features
 - FastAPI endpoints for data operations and retrieval
 - PostgreSQL + pgvector integration for embedding storage
-- Neo4j graph database integration
 - OpenAI embeddings generation
 - Document deduplication system
-- Basic graph schema and relationships
 - Multi-format file processing pipeline
 - DBT data transformation integration
 
 ### In Development
 - Advanced entity extraction
-- Relationship inference engine
-- Knowledge graph enrichment
+- Semantic search optimization
 - Result reranking system
 - Batch processing capabilities
 - Caching implementation
@@ -63,15 +59,15 @@ Providing a unified solution for handling both structured and unstructured data 
 
 ### Phase 1: Core Enhancement
 - Document chunking and preprocessing
-- Advanced entity recognition
-- Relationship type expansion
+- Advanced metadata extraction
 - Query optimization
+- Vector indexing improvements
 
 ### Phase 2: Advanced Features
-- Automated knowledge graph construction
-- Context-aware retrieval
-- Dynamic relationship weighting
 - Multi-model embedding support
+- Context-aware retrieval
+- Dynamic similarity scoring
+- Advanced document clustering
 
 ### Phase 3: Scale & Performance
 - Distributed processing
@@ -93,6 +89,6 @@ Providing a unified solution for handling both structured and unstructured data 
 
 ## 🛠️ Tech Stack
 - **Backend**: FastAPI, Python 3.9+
-- **Databases**: PostgreSQL, pgvector, Neo4j
+- **Databases**: PostgreSQL, pgvector
 - **Processing**: DBT, LangChain, OpenAI
 - **Infrastructure**: Docker, Docker Compose

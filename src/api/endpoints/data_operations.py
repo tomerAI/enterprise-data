@@ -2,6 +2,7 @@ from fastapi import APIRouter, UploadFile, File, HTTPException, Query
 from typing import List, Optional
 from services.data_processor import DataProcessorService
 from core.config import settings
+from processors.processor_registry import ProcessorRegistry
 
 router = APIRouter()
 data_processor = DataProcessorService()
@@ -20,6 +21,15 @@ async def upload_data(
         files: List of files to process
         process_type: Optional specific processing type
     """
+    # Validate source_type is supported
+    supported_types = {ext.lstrip('.') for processor in ProcessorRegistry._processors.values() 
+                      for ext in processor.get_supported_extensions()}
+    if source_type.lower() not in supported_types:
+        raise HTTPException(
+            status_code=400, 
+            detail=f"Unsupported source type. Supported types: {', '.join(supported_types)}"
+        )
+    
     try:
         results = await data_processor.process_files(
             files=files,
@@ -31,12 +41,3 @@ async def upload_data(
         raise HTTPException(status_code=400, detail=str(e))
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
-
-@router.post("/graph/query")
-async def query_graph(query: dict):
-    """Execute a Cypher query against the graph database"""
-    try:
-        results = await data_processor.query_graph(query)
-        return {"results": results}
-    except Exception as e:
-        raise HTTPException(status_code=500, detail=str(e)) 
